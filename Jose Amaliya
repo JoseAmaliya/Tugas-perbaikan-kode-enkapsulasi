@@ -1,0 +1,69 @@
+class Mahasiswa {
+    #nilai;
+
+    constructor(nama, nim, nilai) {
+        this.nama = nama;  
+        this.nim = nim;    
+        this.#nilai = nilai; 
+
+        // Getter untuk nilai
+        this.getNilai = () => {
+            return this.#nilai;
+        };
+
+        // Setter untuk nilai
+        this.setNilai = (nilaiBaru) => {
+            if (nilaiBaru >= 0 && nilaiBaru <= 100) {
+                this.#nilai = nilaiBaru;
+            } else {
+                console.log("Nilai harus antara 0 dan 100");
+            }
+        };
+    }
+}
+// Kelas MahasiswaView (View)
+class MahasiswaView {
+    render(mahasiswa) {
+        return `
+Mahasiswa:
+Nama: ${mahasiswa.nama}
+NIM: ${mahasiswa.nim}
+Nilai: ${mahasiswa.getNilai()}
+        `;
+    }
+}
+
+// Kelas MahasiswaController (Controller)
+class MahasiswaController {
+    constructor(model, view) {
+        this.model = model;
+        this.view = view;
+        this.mahasiswa = null; // add a property to store the Mahasiswa object
+    }
+
+    tampilkanMahasiswa() {
+        // Buat objek mahasiswa
+        this.mahasiswa = new this.model("Jose Amlya", "01110057", 100);
+        const output = this.view.render(this.mahasiswa);
+        console.log(output);
+    }
+
+    ubahNilai(nama, nim, nilaiBaru) {
+        // Update the existing Mahasiswa object
+        if (this.mahasiswa && this.mahasiswa.nama === nama && this.mahasiswa.nim === nim) {
+            this.mahasiswa.setNilai(nilaiBaru);
+            console.log(`${nama} memiliki nilai baru: ${this.mahasiswa.getNilai()}`);
+            // Update the view to reflect the changes
+            const output = this.view.render(this.mahasiswa);
+            console.log(output);
+        } else {
+            console.log("Mahasiswa tidak ditemukan");
+        }
+    }
+}
+
+const mahasiswaView = new MahasiswaView();
+const mahasiswaController = new MahasiswaController(Mahasiswa, mahasiswaView); 
+
+mahasiswaController.tampilkanMahasiswa();
+mahasiswaController.ubahNilai("Jose Amlya", "01110057", 95);
